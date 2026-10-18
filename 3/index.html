@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <title>Лабораторна робота №3 - Школа</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <h1>Школа</h1>
+
+  <!-- Таби -->
+  <button id="tab-subjects">Предмети</button>
+  <button id="tab-teachers">Вчителі</button>
+
+  <div id="subjects-block">
+    <h2>Предмети</h2>
+
+    <h3>Додати предмет</h3>
+    <div>
+      <input id="subject-name" placeholder="Назва">
+      <input id="subject-department" placeholder="Кафедра">
+      <input id="subject-hours" type="number" placeholder="Годин на рік">
+      <input id="subject-grade" type="number" placeholder="Клас">
+      <input id="subject-room" placeholder="Кабінет">
+      <input id="subject-difficulty" type="number" placeholder="Складність 1-5">
+      <select id="subject-mandatory">
+        <option value="Так">Обов'язковий: Так</option>
+        <option value="Ні">Обов'язковий: Ні</option>
+      </select>
+      <button id="add-subject">Додати</button>
+    </div>
+
+    <table id="subjects-table"></table>
+  </div>
+
+  <div id="teachers-block">
+    <h2>Вчителі</h2>
+
+    <h3>Додати вчителя</h3>
+    <div>
+      <input id="teacher-fullName" placeholder="ПІБ">
+      <select id="teacher-subject"></select>
+      <input id="teacher-email" placeholder="Email">
+      <input id="teacher-phone" placeholder="Телефон">
+      <input id="teacher-rate" type="number" step="0.25" placeholder="Ставка">
+      <input id="teacher-experience" type="number" placeholder="Стаж">
+      <select id="teacher-category">
+        <option value="Спеціаліст">Спеціаліст</option>
+        <option value="Друга">Друга</option>
+        <option value="Перша">Перша</option>
+        <option value="Вища">Вища</option>
+      </select>
+      <button id="add-teacher">Додати</button>
+    </div>
+
+    <table id="teachers-table"></table>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
