@@ -1,19 +1,9 @@
 // Предметна область: школа. Дві сутності: предмети і вчителі.
 
-var subjects = [
-  { name: 'Математика', department: 'Точні науки', hours: 175, grade: 9, room: '201', difficulty: 4, mandatory: 'Так' },
-  { name: 'Українська мова', department: 'Гуманітарні науки', hours: 105, grade: 9, room: '105', difficulty: 3, mandatory: 'Так' },
-  { name: 'Фізика', department: 'Природничі науки', hours: 105, grade: 9, room: '301', difficulty: 5, mandatory: 'Так' },
-  { name: 'Інформатика', department: 'Точні науки', hours: 70, grade: 9, room: '210', difficulty: 3, mandatory: 'Так' },
-  { name: 'Музичне мистецтво', department: 'Мистецтво', hours: 35, grade: 9, room: '401', difficulty: 1, mandatory: 'Ні' }
-];
-
-var teachers = [
-  { fullName: 'Коваленко Олена Петрівна', subject: 'Математика', email: 'kovalenko@school.ua', phone: '0111111111', rate: 1, experience: 15, category: 'Вища' },
-  { fullName: 'Шевченко Іван Миколайович', subject: 'Фізика', email: 'shevchenko@school.ua', phone: '0222222222', rate: 1.5, experience: 22, category: 'Вища' },
-  { fullName: 'Мельник Наталія Василівна', subject: 'Українська мова', email: 'melnyk@school.ua', phone: '0333333333', rate: 1, experience: 9, category: 'Перша' },
-  { fullName: 'Бондаренко Андрій Олегович', subject: 'Інформатика', email: 'bondarenko@school.ua', phone: '0444444444', rate: 0.75, experience: 4, category: 'Друга' }
-];
+// Дані зберігаються тільки в localStorage, у коді їх немає.
+// Спочатку таблиці порожні - дані додаються через форми.
+var subjects = [];
+var teachers = [];
 
 // Які колонки є в таблицях: ключ в об'єкті і заголовок
 // type - тип даних, min/max - межі для чисел, options - значення для вибору зі списку
@@ -413,11 +403,7 @@ window.addEventListener('storage', function (event) {
   }
 });
 
-// Старт: якщо в localStorage вже є дані - беремо їх, інакше зберігаємо початкові
-if (localStorage.getItem(STORAGE_KEY) === null) {
-  saveData();
-} else {
-  loadData();
-}
+// Старт: беремо дані з localStorage (якщо вони там є), інакше таблиці порожні
+loadData();
 renderAll();
 showTab('subjects');
