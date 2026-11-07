@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="uk">
 <head>
   <meta charset="UTF-8">
@@ -17,19 +17,20 @@
 
     <h3>Додати предмет</h3>
     <div>
-      <input id="subject-name" placeholder="Назва">
-      <input id="subject-department" placeholder="Кафедра">
-      <input id="subject-hours" type="number" placeholder="Годин на рік">
-      <input id="subject-grade" type="number" placeholder="Клас">
-      <input id="subject-room" placeholder="Кабінет">
-      <input id="subject-difficulty" type="number" placeholder="Складність 1-5">
-      <select id="subject-mandatory">
+      <input id="subjects-name" placeholder="Назва">
+      <input id="subjects-department" placeholder="Кафедра">
+      <input id="subjects-hours" type="number" placeholder="Годин на рік">
+      <input id="subjects-grade" type="number" placeholder="Клас">
+      <input id="subjects-room" placeholder="Кабінет">
+      <input id="subjects-difficulty" type="number" placeholder="Складність 1-5">
+      <select id="subjects-mandatory">
         <option value="Так">Обов'язковий: Так</option>
         <option value="Ні">Обов'язковий: Ні</option>
       </select>
-      <button id="add-subject">Додати</button>
+      <button id="add-subjects">Додати</button>
     </div>
 
+    <p>Клікніть по клітинці, щоб змінити значення (Enter або клік повз - зберегти).</p>
     <table id="subjects-table"></table>
   </div>
 
@@ -38,23 +39,29 @@
 
     <h3>Додати вчителя</h3>
     <div>
-      <input id="teacher-fullName" placeholder="ПІБ">
-      <select id="teacher-subject"></select>
-      <input id="teacher-email" placeholder="Email">
-      <input id="teacher-phone" placeholder="Телефон">
-      <input id="teacher-rate" type="number" step="0.25" placeholder="Ставка">
-      <input id="teacher-experience" type="number" placeholder="Стаж">
-      <select id="teacher-category">
+      <input id="teachers-fullName" placeholder="ПІБ">
+      <select id="teachers-subject"></select>
+      <input id="teachers-email" placeholder="Email">
+      <input id="teachers-phone" placeholder="Телефон">
+      <input id="teachers-rate" type="number" step="0.25" placeholder="Ставка">
+      <input id="teachers-experience" type="number" placeholder="Стаж">
+      <select id="teachers-category">
         <option value="Спеціаліст">Спеціаліст</option>
         <option value="Друга">Друга</option>
         <option value="Перша">Перша</option>
         <option value="Вища">Вища</option>
       </select>
-      <button id="add-teacher">Додати</button>
+      <button id="add-teachers">Додати</button>
     </div>
 
+    <p>Клікніть по клітинці, щоб змінити значення (Enter або клік повз - зберегти).</p>
     <table id="teachers-table"></table>
   </div>
+
+  <dialog id="message-dialog">
+    <p id="message-text"></p>
+    <button id="message-close">OK</button>
+  </dialog>
 
   <script src="script.js"></script>
 </body>

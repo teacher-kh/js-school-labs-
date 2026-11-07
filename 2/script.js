@@ -1,210 +1,289 @@
 // Предметна область: школа. Дві сутності: предмети і вчителі.
 
-var subjects = [
-  { name: 'Математика', department: 'Точні науки', hours: 175, grade: 9, room: '201', difficulty: 4, mandatory: 'Так' },
-  { name: 'Українська мова', department: 'Гуманітарні науки', hours: 105, grade: 9, room: '105', difficulty: 3, mandatory: 'Так' },
-  { name: 'Фізика', department: 'Природничі науки', hours: 105, grade: 9, room: '301', difficulty: 5, mandatory: 'Так' },
-  { name: 'Інформатика', department: 'Точні науки', hours: 70, grade: 9, room: '210', difficulty: 3, mandatory: 'Так' },
-  { name: 'Музичне мистецтво', department: 'Мистецтво', hours: 35, grade: 9, room: '401', difficulty: 1, mandatory: 'Ні' }
-];
+var database = {
+  subjects: [
+    { name: 'Математика', department: 'Точні науки', hours: 175, grade: 9, room: '201', difficulty: 4, mandatory: 'Так' },
+    { name: 'Українська мова', department: 'Гуманітарні науки', hours: 105, grade: 9, room: '105', difficulty: 3, mandatory: 'Так' },
+    { name: 'Фізика', department: 'Природничі науки', hours: 105, grade: 9, room: '301', difficulty: 5, mandatory: 'Так' },
+    { name: 'Інформатика', department: 'Точні науки', hours: 70, grade: 9, room: '210', difficulty: 3, mandatory: 'Так' },
+    { name: 'Музичне мистецтво', department: 'Мистецтво', hours: 35, grade: 9, room: '401', difficulty: 1, mandatory: 'Ні' }
+  ],
+  teachers: [
+    { fullName: 'Коваленко Олена Петрівна', subject: 'Математика', email: 'kovalenko@school.ua', phone: '0111111111', rate: 1, experience: 15, category: 'Вища' },
+    { fullName: 'Шевченко Іван Миколайович', subject: 'Фізика', email: 'shevchenko@school.ua', phone: '0222222222', rate: 1.5, experience: 22, category: 'Вища' },
+    { fullName: 'Мельник Наталія Василівна', subject: 'Українська мова', email: 'melnyk@school.ua', phone: '0333333333', rate: 1, experience: 9, category: 'Перша' },
+    { fullName: 'Бондаренко Андрій Олегович', subject: 'Інформатика', email: 'bondarenko@school.ua', phone: '0444444444', rate: 0.75, experience: 4, category: 'Друга' }
+  ]
+};
 
-var teachers = [
-  { fullName: 'Коваленко Олена Петрівна', subject: 'Математика', email: 'kovalenko@school.ua', phone: '0111111111', rate: 1, experience: 15, category: 'Вища' },
-  { fullName: 'Шевченко Іван Миколайович', subject: 'Фізика', email: 'shevchenko@school.ua', phone: '0222222222', rate: 1.5, experience: 22, category: 'Вища' },
-  { fullName: 'Мельник Наталія Василівна', subject: 'Українська мова', email: 'melnyk@school.ua', phone: '0333333333', rate: 1, experience: 9, category: 'Перша' },
-  { fullName: 'Бондаренко Андрій Олегович', subject: 'Інформатика', email: 'bondarenko@school.ua', phone: '0444444444', rate: 0.75, experience: 4, category: 'Друга' }
-];
+// Колонки таблиць: key - ключ в об'єкті, title - заголовок, type - тип поля,
+// minimum і maximum - межі для чисел, requiredText - текст, який має бути в значенні
+var columns = {
+  subjects: [
+    { key: 'name', title: 'Назва', type: 'text' },
+    { key: 'department', title: 'Кафедра', type: 'text' },
+    { key: 'hours', title: 'Годин на рік', type: 'number', minimum: 1, maximum: 500 },
+    { key: 'grade', title: 'Клас', type: 'number', minimum: 1, maximum: 11 },
+    { key: 'room', title: 'Кабінет', type: 'text' },
+    { key: 'difficulty', title: 'Складність (1-5)', type: 'number', minimum: 1, maximum: 5 },
+    { key: 'mandatory', title: "Обов'язковий", type: 'text' }
+  ],
+  teachers: [
+    { key: 'fullName', title: 'ПІБ', type: 'text' },
+    { key: 'subject', title: 'Предмет', type: 'text' },
+    { key: 'email', title: 'Email', type: 'text', requiredText: '@' },
+    { key: 'phone', title: 'Телефон', type: 'text' },
+    { key: 'rate', title: 'Ставка', type: 'number', minimum: 0.25, maximum: 2 },
+    { key: 'experience', title: 'Стаж (років)', type: 'number', minimum: 0, maximum: 60 },
+    { key: 'category', title: 'Категорія', type: 'text' }
+  ]
+};
 
-// Які колонки є в таблицях: ключ в об'єкті і заголовок
-var subjectColumns = [
-  { key: 'name', title: 'Назва' },
-  { key: 'department', title: 'Кафедра' },
-  { key: 'hours', title: 'Годин на рік' },
-  { key: 'grade', title: 'Клас' },
-  { key: 'room', title: 'Кабінет' },
-  { key: 'difficulty', title: 'Складність (1-5)' },
-  { key: 'mandatory', title: "Обов'язковий" }
-];
+function showMessage(text) {
+  document.getElementById('message-text').textContent = text;
+  document.getElementById('message-dialog').open = true;
+}
 
-var teacherColumns = [
-  { key: 'fullName', title: 'ПІБ' },
-  { key: 'subject', title: 'Предмет' },
-  { key: 'email', title: 'Email' },
-  { key: 'phone', title: 'Телефон' },
-  { key: 'rate', title: 'Ставка' },
-  { key: 'experience', title: 'Стаж (років)' },
-  { key: 'category', title: 'Категорія' }
-];
+function hideMessage() {
+  document.getElementById('message-dialog').open = false;
+}
 
-// Малює таблицю з потрібним id
-function renderTable(tableId, columns, rows) {
-  var table = document.getElementById(tableId);
-  table.innerHTML = '';
+function findSubjectNames() {
+  var names = [];
 
-  // рядок із заголовками
-  var headRow = document.createElement('tr');
-  for (var i = 0; i < columns.length; i++) {
-    var th = document.createElement('th');
-    th.textContent = columns[i].title;
-    headRow.appendChild(th);
+  for (var i = 0; i < database.subjects.length; i++) {
+    names.push(database.subjects[i].name);
   }
-  table.appendChild(headRow);
 
-  // рядки з даними
-  for (var r = 0; r < rows.length; r++) {
-    var tr = document.createElement('tr');
-    for (var c = 0; c < columns.length; c++) {
-      var td = document.createElement('td');
-      td.textContent = rows[r][columns[c].key];
-      tr.appendChild(td);
+  return names;
+}
+
+function hasSubject(name) {
+  for (var i = 0; i < database.subjects.length; i++) {
+    if (database.subjects[i].name === name) {
+      return true;
     }
-    table.appendChild(tr);
+  }
+
+  return false;
+}
+
+function createHeaderRow(tableName) {
+  var row = document.createElement('tr');
+
+  for (var i = 0; i < columns[tableName].length; i++) {
+    var headerCell = document.createElement('th');
+    headerCell.textContent = columns[tableName][i].title;
+    row.appendChild(headerCell);
+  }
+
+  return row;
+}
+
+function createDataCell(tableName, rowIndex, column) {
+  var cell = document.createElement('td');
+  cell.textContent = database[tableName][rowIndex][column.key];
+  return cell;
+}
+
+function createDataRow(tableName, rowIndex) {
+  var row = document.createElement('tr');
+
+  for (var i = 0; i < columns[tableName].length; i++) {
+    row.appendChild(createDataCell(tableName, rowIndex, columns[tableName][i]));
+  }
+
+  return row;
+}
+
+function createOption(text) {
+  var option = document.createElement('option');
+  option.value = text;
+  option.textContent = text;
+  return option;
+}
+
+function renderTable(tableName) {
+  var table = document.getElementById(tableName + '-table');
+  table.innerHTML = '';
+  table.appendChild(createHeaderRow(tableName));
+
+  for (var i = 0; i < database[tableName].length; i++) {
+    table.appendChild(createDataRow(tableName, i));
   }
 }
 
-// Перемикання табів: показуємо одну таблицю, іншу ховаємо
-function showTab(name) {
-  if (name === 'subjects') {
-    document.getElementById('subjects-block').style.display = 'block';
-    document.getElementById('teachers-block').style.display = 'none';
-  } else {
-    document.getElementById('subjects-block').style.display = 'none';
-    document.getElementById('teachers-block').style.display = 'block';
+// Випадний список предметів у формі вчителя заповнюється з таблиці предметів
+function renderSubjectSelect() {
+  var select = document.getElementById('teachers-subject');
+  var selectedValue = select.value;
+  var names = findSubjectNames();
+  select.innerHTML = '';
+
+  for (var i = 0; i < names.length; i++) {
+    select.appendChild(createOption(names[i]));
   }
+
+  select.value = selectedValue;
+}
+
+function renderAll() {
+  renderTable('subjects');
+  renderTable('teachers');
+  renderSubjectSelect();
+}
+
+function hideTabs() {
+  document.getElementById('subjects-block').style.display = 'none';
+  document.getElementById('teachers-block').style.display = 'none';
+}
+
+// Перемикання табів: ховаємо всі таблиці й показуємо потрібну
+function showTab(tableName) {
+  hideTabs();
+  document.getElementById(tableName + '-block').style.display = 'block';
+}
+
+function findNumberError(column, value) {
+  if (column.type !== 'number') {
+    return null;
+  }
+
+  var number = Number(value);
+  if (isNaN(number) || number < column.minimum || number > column.maximum) {
+    return 'Поле "' + column.title + '": число від ' + column.minimum + ' до ' + column.maximum;
+  }
+
+  return null;
+}
+
+function findTextError(column, value) {
+  if (column.requiredText && value.indexOf(column.requiredText) === -1) {
+    return 'Поле "' + column.title + '" має містити ' + column.requiredText;
+  }
+
+  return null;
+}
+
+function findValueError(column, value) {
+  if (value === '') {
+    return 'Заповніть поле "' + column.title + '"';
+  }
+
+  var numberError = findNumberError(column, value);
+  if (numberError !== null) {
+    return numberError;
+  }
+
+  return findTextError(column, value);
+}
+
+function findDuplicateError(name) {
+  if (hasSubject(name)) {
+    return 'Такий предмет вже є';
+  }
+
+  return null;
+}
+
+function findSubjectError(name) {
+  if (!hasSubject(name)) {
+    return 'Такого предмета немає в таблиці "Предмети"';
+  }
+
+  return null;
+}
+
+function findRowError(tableName, values) {
+  if (tableName === 'subjects') {
+    return findDuplicateError(values.name);
+  }
+
+  return findSubjectError(values.subject);
+}
+
+function findFormError(tableName, values) {
+  for (var i = 0; i < columns[tableName].length; i++) {
+    var column = columns[tableName][i];
+    var valueError = findValueError(column, values[column.key]);
+    if (valueError !== null) {
+      return valueError;
+    }
+  }
+
+  return findRowError(tableName, values);
+}
+
+function readFormValues(tableName) {
+  var values = {};
+
+  for (var i = 0; i < columns[tableName].length; i++) {
+    var key = columns[tableName][i].key;
+    values[key] = document.getElementById(tableName + '-' + key).value.trim();
+  }
+
+  return values;
+}
+
+function convertValue(column, value) {
+  if (column.type === 'number') {
+    return Number(value);
+  }
+
+  return value;
+}
+
+function convertRow(tableName, values) {
+  var row = {};
+
+  for (var i = 0; i < columns[tableName].length; i++) {
+    var column = columns[tableName][i];
+    row[column.key] = convertValue(column, values[column.key]);
+  }
+
+  return row;
+}
+
+function clearForm(tableName) {
+  for (var i = 0; i < columns[tableName].length; i++) {
+    var field = document.getElementById(tableName + '-' + columns[tableName][i].key);
+    if (field.tagName === 'INPUT') {
+      field.value = '';
+    }
+  }
+}
+
+function onAddClick(tableName) {
+  var values = readFormValues(tableName);
+  var message = findFormError(tableName, values);
+
+  if (message !== null) {
+    showMessage(message);
+    return;
+  }
+
+  database[tableName].push(convertRow(tableName, values));
+  renderAll();
+  clearForm(tableName);
 }
 
 document.getElementById('tab-subjects').addEventListener('click', function () {
   showTab('subjects');
 });
+
 document.getElementById('tab-teachers').addEventListener('click', function () {
   showTab('teachers');
 });
 
-// Заповнює випадний список предметів у формі додавання вчителя
-function fillSubjectSelect() {
-  var select = document.getElementById('teacher-subject');
-  var oldValue = select.value;
-  select.innerHTML = '';
-  for (var i = 0; i < subjects.length; i++) {
-    var option = document.createElement('option');
-    option.value = subjects[i].name;
-    option.textContent = subjects[i].name;
-    select.appendChild(option);
-  }
-  select.value = oldValue;
-}
+document.getElementById('add-subjects').addEventListener('click', function () {
+  onAddClick('subjects');
+});
 
-// Перевіряє, чи є предмет з такою назвою
-function subjectExists(name) {
-  for (var i = 0; i < subjects.length; i++) {
-    if (subjects[i].name === name) {
-      return true;
-    }
-  }
-  return false;
-}
+document.getElementById('add-teachers').addEventListener('click', function () {
+  onAddClick('teachers');
+});
 
-// Додавання предмета
-function addSubject() {
-  var name = document.getElementById('subject-name').value.trim();
-  var department = document.getElementById('subject-department').value.trim();
-  var hours = Number(document.getElementById('subject-hours').value);
-  var grade = Number(document.getElementById('subject-grade').value);
-  var room = document.getElementById('subject-room').value.trim();
-  var difficulty = Number(document.getElementById('subject-difficulty').value);
-  var mandatory = document.getElementById('subject-mandatory').value;
+document.getElementById('message-close').addEventListener('click', hideMessage);
 
-  if (name === '' || department === '' || room === '') {
-    alert('Заповніть усі поля');
-    return;
-  }
-  if (!(hours > 0) || !(grade >= 1 && grade <= 11)) {
-    alert('Години мають бути більше 0, клас - від 1 до 11');
-    return;
-  }
-  if (!(difficulty >= 1 && difficulty <= 5)) {
-    alert('Складність має бути від 1 до 5');
-    return;
-  }
-  if (subjectExists(name)) {
-    alert('Такий предмет вже є');
-    return;
-  }
-
-  subjects.push({
-    name: name,
-    department: department,
-    hours: hours,
-    grade: grade,
-    room: room,
-    difficulty: difficulty,
-    mandatory: mandatory
-  });
-  renderTable('subjects-table', subjectColumns, subjects);
-  fillSubjectSelect();
-
-  // очищаємо поля форми
-  document.getElementById('subject-name').value = '';
-  document.getElementById('subject-department').value = '';
-  document.getElementById('subject-hours').value = '';
-  document.getElementById('subject-grade').value = '';
-  document.getElementById('subject-room').value = '';
-  document.getElementById('subject-difficulty').value = '';
-}
-
-// Додавання вчителя
-function addTeacher() {
-  var fullName = document.getElementById('teacher-fullName').value.trim();
-  var subject = document.getElementById('teacher-subject').value.trim();
-  var email = document.getElementById('teacher-email').value.trim();
-  var phone = document.getElementById('teacher-phone').value.trim();
-  var rate = Number(document.getElementById('teacher-rate').value);
-  var experience = document.getElementById('teacher-experience').value;
-  var category = document.getElementById('teacher-category').value;
-
-  if (fullName === '' || subject === '' || email === '' || phone === '' || experience === '') {
-    alert('Заповніть усі поля');
-    return;
-  }
-  if (!subjectExists(subject)) {
-    alert('Такого предмета немає в таблиці "Предмети"');
-    return;
-  }
-  if (email.indexOf('@') === -1) {
-    alert('Email має містити @');
-    return;
-  }
-  if (!(rate > 0 && rate <= 2)) {
-    alert('Ставка має бути від 0 до 2');
-    return;
-  }
-  if (Number(experience) < 0) {
-    alert('Стаж не може бути від\'ємним');
-    return;
-  }
-
-  teachers.push({
-    fullName: fullName,
-    subject: subject,
-    email: email,
-    phone: phone,
-    rate: rate,
-    experience: Number(experience),
-    category: category
-  });
-  renderTable('teachers-table', teacherColumns, teachers);
-
-  document.getElementById('teacher-fullName').value = '';
-  document.getElementById('teacher-email').value = '';
-  document.getElementById('teacher-phone').value = '';
-  document.getElementById('teacher-rate').value = '';
-  document.getElementById('teacher-experience').value = '';
-}
-
-document.getElementById('add-subject').addEventListener('click', addSubject);
-document.getElementById('add-teacher').addEventListener('click', addTeacher);
-
-renderTable('subjects-table', subjectColumns, subjects);
-fillSubjectSelect();
-renderTable('teachers-table', teacherColumns, teachers);
+renderAll();
 showTab('subjects');
