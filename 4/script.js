@@ -1,7 +1,8 @@
 // Предметна область: школа. Дві сутності: предмети і вчителі.
 
-// Дані не зберігаються в коді: вони живуть тільки в localStorage
+// Дані не зберігаються в коді: вони живуть на сервері (MockAPI) і в localStorage
 var storageKey = 'school_data';
+var apiUrl = 'https://6aeecbd3a677fe0fc15010f2.mockapi.io/api/v1';
 
 var database = {
   subjects: [],
@@ -363,6 +364,62 @@ function loadDatabase() {
   database = JSON.parse(text);
 }
 
+function sendRequest(path, method, body) {
+  var options = { method: method, headers: { 'Content-Type': 'application/json' } };
+
+  if (body !== null) {
+    options.body = JSON.stringify(body);
+  }
+
+  return fetch(apiUrl + '/' + path, options).then(function (response) {
+    if (!response.ok) {
+      throw new Error('код ' + response.status);
+    }
+
+    return response.json();
+  });
+}
+
+function onRequestError(error) {
+  showMessage('Помилка сервера: ' + error.message);
+}
+
+function loadTable(tableName) {
+  return sendRequest(tableName, 'GET', null).then(function (rows) {
+    database[tableName] = rows;
+  });
+}
+
+function loadServer() {
+  Promise.all([loadTable('subjects'), loadTable('teachers')]).then(function () {
+    saveDatabase();
+    renderAll();
+  }).catch(onRequestError);
+}
+
+function createServerRow(tableName, row) {
+  sendRequest(tableName, 'POST', row).then(function (created) {
+    row.id = created.id;
+    saveDatabase();
+  }).catch(onRequestError);
+}
+
+function updateServerRow(tableName, row) {
+  if (!row.id) {
+    return;
+  }
+
+  sendRequest(tableName + '/' + row.id, 'PUT', row).catch(onRequestError);
+}
+
+function removeServerRow(tableName, row) {
+  if (!row.id) {
+    return;
+  }
+
+  sendRequest(tableName + '/' + row.id, 'DELETE', null).catch(onRequestError);
+}
+
 function onStorageChange(event) {
   if (event.key !== storageKey) {
     return;
@@ -382,10 +439,12 @@ function onAddClick(tableName) {
     return;
   }
 
-  database[tableName].push(convertRow(tableName, values));
+  var row = convertRow(tableName, values);
+  database[tableName].push(row);
   saveDatabase();
   renderAll();
   clearForm(tableName);
+  createServerRow(tableName, row);
 }
 
 function onDeleteClick(tableName, rowIndex) {
@@ -397,9 +456,10 @@ function onDeleteClick(tableName, rowIndex) {
     return;
   }
 
-  database[tableName].splice(rowIndex, 1);
+  var row = database[tableName].splice(rowIndex, 1)[0];
   saveDatabase();
   renderAll();
+  removeServerRow(tableName, row);
 }
 
 function onCellEdit(tableName, rowIndex, column, value) {
@@ -413,6 +473,7 @@ function onCellEdit(tableName, rowIndex, column, value) {
 
   database[tableName][rowIndex][column.key] = convertValue(column, value);
   saveDatabase();
+  updateServerRow(tableName, database[tableName][rowIndex]);
 }
 
 // Клік по клітинці: показуємо поле редагування, Enter або клік повз - зберігає
@@ -468,3 +529,4 @@ window.addEventListener('storage', onStorageChange);
 loadDatabase();
 renderAll();
 showTab('subjects');
+loadServer();
